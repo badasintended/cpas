@@ -1,4 +1,4 @@
-# needle [![1][1]][6]  [![2][2]][4]  [![3][3]][5] [![10][10]][11] <img src="src/main/resources/assets/needle/icon.png" align="right"/>
+# needle [![1][1]][6]  [![2][2]][4]  [![3][3]][5] [![10][10]][11] <img src="src/main/resources/assets/cpas/icon.png" align="right"/>
 
 [![Fabric API](https://images2.imgbox.com/8e/38/bfInI5qv_o.png)][8] [![Fabric Language Kotlin](https://images2.imgbox.com/e6/72/9pHQB5ZC_o.png)][9]
 

@@ -13,12 +13,24 @@ if (versionEnv == null || versionEnv.isBlank()) {
 
 version = "${versionEnv}+${project.minecraft}"
 
+repositories {
+    maven {
+        url = "https://jitpack.io"
+    }
+    maven {
+        name = "NerdHubMC"
+        url = "https://maven.abusedmaster.xyz/"
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft}"
     mappings "net.fabricmc:yarn:${yarn}:v2"
     modImplementation "net.fabricmc:fabric-loader:${loader}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric}"
+    modImplementation "com.github.emilyploszaj:trinkets:${trinkets}"
+    modImplementation "me.shedaniel:RoughlyEnoughItems:${rei}"
 }
 
 processResources {
