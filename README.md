@@ -2,11 +2,11 @@
 
 [![Fabric API](https://images2.imgbox.com/8e/38/bfInI5qv_o.png)][8]
 
-conveniently placed armor slots conveniently placed armor slots conveniently placed armor slots    
-conveniently placed armor slots conveniently placed armor slots conveniently placed armor slots    
-conveniently placed armor slots conveniently placed armor slots conveniently placed armor slots    
-conveniently placed armor slots conveniently placed armor slots conveniently placed armor slots    
-conveniently placed armor slots conveniently placed armor slots conveniently placed armor slots    
+conveniently placed armor slots    
+conveniently placed armor slots    
+conveniently placed armor slots    
+conveniently placed armor slots    
+conveniently placed armor slots    
 
 [1]: https://img.shields.io/badge/minecraft-1.16+-brightgreen
 [2]: https://img.shields.io/badge/loader-Fabric-blue
