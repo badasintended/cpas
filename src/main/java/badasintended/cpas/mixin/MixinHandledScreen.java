@@ -1,11 +1,15 @@
 package badasintended.cpas.mixin;
 
-import badasintended.cpas.client.CpasClient;
+import badasintended.cpas.client.api.CpasTarget;
+import badasintended.cpas.client.widget.ArmorPanelWidget;
+import badasintended.cpas.client.widget.EditorScreenWidget;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.slot.Slot;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -13,7 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HandledScreen.class)
-public abstract class MixinHandledScreen extends MixinScreen {
+public abstract class MixinHandledScreen implements CpasTarget {
+
+    @Unique
+    protected EditorScreenWidget editorScreen = null;
+
+    @Unique
+    protected ArmorPanelWidget armorPanel = null;
 
     @Inject(method = "render", at = @At("HEAD"))
     private void checkRecipeButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
@@ -33,40 +43,6 @@ public abstract class MixinHandledScreen extends MixinScreen {
         }
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (editorScreen != null) {
-            if (editorScreen.visible) {
-                editorScreen.mouseClicked(mouseX, mouseY, button);
-                cir.setReturnValue(true);
-            } else if (armorPanel != null && armorPanel.isMouseOver(mouseX, mouseY)) {
-                armorPanel.mouseClicked(mouseX, mouseY, button);
-                cir.setReturnValue(true);
-            }
-        }
-    }
-
-    @Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
-    private void mouseReleased(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (editorScreen != null) {
-            if (editorScreen.visible) {
-                editorScreen.mouseReleased(mouseX, mouseY, button);
-                cir.setReturnValue(true);
-            } else if (armorPanel != null && armorPanel.isMouseOver(mouseX, mouseY)) {
-                armorPanel.mouseReleased(mouseX, mouseY, button);
-                cir.setReturnValue(true);
-            }
-        }
-    }
-
-    @Inject(method = "keyPressed", at = @At("TAIL"), cancellable = true)
-    private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (editorScreen != null && CpasClient.EDIT.matchesKey(keyCode, scanCode)) {
-            editorScreen.toggle();
-            cir.setReturnValue(true);
-        }
-    }
-
     @Inject(method = "drawSlot", at = @At("HEAD"), cancellable = true)
     private void drawSlot(MatrixStack matrices, Slot slot, CallbackInfo ci) {
         if (editorScreen != null && editorScreen.visible)
@@ -81,6 +57,28 @@ public abstract class MixinHandledScreen extends MixinScreen {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/slot/Slot;doDrawHoveringEffect()Z", ordinal = 1))
     private boolean checkEditor(Slot slot) {
         return (editorScreen == null || !editorScreen.visible) && slot.doDrawHoveringEffect();
+    }
+
+    @Nullable
+    @Override
+    public ArmorPanelWidget cpas$getArmorPanel() {
+        return armorPanel;
+    }
+
+    @Nullable
+    @Override
+    public EditorScreenWidget cpas$getEditorScreen() {
+        return editorScreen;
+    }
+
+    @Override
+    public void cpas$setArmorPanel(ArmorPanelWidget armorPanel) {
+        this.armorPanel = armorPanel;
+    }
+
+    @Override
+    public void cpas$setEditorScreen(EditorScreenWidget editorScreen) {
+        this.editorScreen = editorScreen;
     }
 
 }

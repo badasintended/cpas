@@ -1,10 +1,18 @@
 {
   "required"          : true,
   "minVersion"        : "0.8",
+  "priority"          : 0,
   "package"           : "badasintended.cpas.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins"            : [],
-  "client"            : ["AccessorHandledScreen", "MixinConfigObjectImpl", "MixinHandledScreen", "MixinScreen"],
+  "client"            : [
+    "AccessorHandledScreen",
+    "MixinConfigObjectImpl",
+    "MixinHandledScreen",
+    "MixinKeyboard",
+    "MixinMinecraftClient",
+    "MixinMouse"
+  ],
   "injectors"         : {
     "defaultRequire": 1
   }

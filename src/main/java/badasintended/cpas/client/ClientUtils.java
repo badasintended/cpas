@@ -3,8 +3,14 @@ package badasintended.cpas.client;
 import java.util.function.Consumer;
 
 import badasintended.cpas.api.SlotType;
+import badasintended.cpas.client.api.CpasTarget;
+import badasintended.cpas.client.toast.HelpToast;
+import badasintended.cpas.client.widget.ArmorPanelWidget;
 import badasintended.cpas.client.widget.ArmorSlotWidget;
+import badasintended.cpas.client.widget.EditorScreenWidget;
 import badasintended.cpas.client.widget.TrinketSlotWidget;
+import badasintended.cpas.config.CpasConfig;
+import badasintended.cpas.mixin.AccessorHandledScreen;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +18,10 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +31,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import static badasintended.cpas.Utils.hasMod;
 
@@ -118,8 +126,48 @@ public final class ClientUtils {
         return hasMod("trinkets") ? new TrinketSlotWidget(x, y, inventory, slot) : new ArmorSlotWidget(x, y, inventory, slot);
     }
 
-    public static Identifier getScreenTypeId(HandledScreen<?> screen) {
-        return Registry.SCREEN_HANDLER.getId(screen.getScreenHandler().getType());
+    public static String getScreenName(HandledScreen<?> screen) {
+        return screen.getClass().getName();
+    }
+
+    public static void injectCpasWidget(Screen screen) {
+        if (screen instanceof HandledScreen<?>) {
+            if (CpasConfig.get().isShowHelp()) {
+                client().getToastManager().add(new HelpToast());
+                CpasConfig.get().setShowHelp(false);
+                CpasConfig.save();
+            }
+
+            int scaledW = client().getWindow().getScaledWidth();
+            int scaledH = client().getWindow().getScaledHeight();
+
+            CpasTarget target = (CpasTarget) screen;
+            HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
+            AccessorHandledScreen accessor = (AccessorHandledScreen) handledScreen;
+
+            if (!(handledScreen instanceof InventoryScreen || handledScreen instanceof CreativeInventoryScreen)) {
+                CpasConfig.Entry entry = CpasConfig.getEntry(handledScreen);
+
+                target.cpas$setEditorScreen(new EditorScreenWidget(scaledW, scaledH, entry, handledScreen));
+
+                if (entry.isEnabled()) {
+                    int panelX;
+                    int panelY;
+
+                    if (entry.isAuto()) {
+                        panelX = accessor.getX() - 35;
+                        panelY = accessor.getY() + accessor.getBackgroundHeight() - ((5 * 18) + 18);
+                    } else {
+                        panelX = scaledW / 2 + entry.getX();
+                        panelY = scaledH / 2 + entry.getY();
+                    }
+
+                    target.cpas$setArmorPanel(new ArmorPanelWidget(panelX, panelY, 32, 5 * 18 + 18, accessor.getPlayerInventory()));
+                } else {
+                    target.cpas$setArmorPanel(null);
+                }
+            }
+        }
     }
 
 }

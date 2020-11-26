@@ -18,9 +18,9 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+
+import static badasintended.cpas.client.ClientUtils.getScreenName;
 
 public final class CpasConfig {
 
@@ -28,7 +28,6 @@ public final class CpasConfig {
 
     public static final Gson GSON = new GsonBuilder()
         .setPrettyPrinting()
-        .registerTypeAdapter(Identifier.class, new Identifier.Serializer())
         .registerTypeAdapter(Entry.class, new Entry.Serializer())
         .create();
 
@@ -63,25 +62,25 @@ public final class CpasConfig {
         }
     }
 
-    public static Entry getEntry(ScreenHandlerType<?> type) {
-        Identifier id = Registry.SCREEN_HANDLER.getId(type);
+    public static Entry getEntry(HandledScreen<?> screen) {
+        String name = getScreenName(screen);
         CpasConfig config = get();
-        if (!config.entries.containsKey(id)) {
-            config.entries.put(id, new Entry());
+        if (!config.entries.containsKey(name)) {
+            config.entries.put(name, new Entry());
             save();
         }
-        return config.entries.get(id);
+        return config.entries.get(name);
     }
 
     private boolean showHelp = true;
 
-    private Map<Identifier, Entry> entries = new HashMap<>();
+    private Map<String, Entry> entries = new HashMap<>();
 
-    public void setEntries(Map<Identifier, Entry> entries) {
+    public void setEntries(Map<String, Entry> entries) {
         this.entries = entries;
     }
 
-    public Map<Identifier, Entry> getEntries() {
+    public Map<String, Entry> getEntries() {
         return entries;
     }
 

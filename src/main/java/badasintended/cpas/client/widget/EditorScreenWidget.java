@@ -10,9 +10,9 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 
-import static badasintended.cpas.client.ClientUtils.client;
 import static badasintended.cpas.client.ClientUtils.drawText;
-import static badasintended.cpas.client.ClientUtils.getScreenTypeId;
+import static badasintended.cpas.client.ClientUtils.getScreenName;
+import static badasintended.cpas.client.ClientUtils.injectCpasWidget;
 import static badasintended.cpas.client.ClientUtils.textRenderer;
 
 @Environment(EnvType.CLIENT)
@@ -22,6 +22,7 @@ public class EditorScreenWidget extends AbstractParentWidget {
     private final CpasConfig.Entry entry;
     private final HandledScreen<?> screen;
     private final AccessorHandledScreen accessor;
+    private final String screenName;
 
     private boolean enabled;
     private boolean auto;
@@ -36,6 +37,7 @@ public class EditorScreenWidget extends AbstractParentWidget {
         this.entry = entry;
         this.screen = screen;
         this.accessor = (AccessorHandledScreen) screen;
+        this.screenName = getScreenName(screen);
     }
 
     public void toggle() {
@@ -93,7 +95,7 @@ public class EditorScreenWidget extends AbstractParentWidget {
             entry.setX(panel.x - scaledW / 2);
             entry.setY(panel.y - scaledH / 2);
             CpasConfig.save();
-            screen.init(client(), scaledW, scaledH);
+            injectCpasWidget(screen);
         }
     }
 
@@ -107,7 +109,7 @@ public class EditorScreenWidget extends AbstractParentWidget {
             maxY = scaledH - 20 - textRenderer().fontHeight;
 
         drawText(matrices, I18n.translate("editor.cpas.title"), minX, minY);
-        drawText(matrices, I18n.translate("editor.cpas.id", getScreenTypeId(screen).toString()), minX, minY + 15);
+        drawText(matrices, I18n.translate("editor.cpas.id", screenName), minX, minY + 15);
 
         int color = !enabled || auto ? 0xFFAAAAAA : 0xFFFFFFFF;
 

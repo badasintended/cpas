@@ -15,4 +15,8 @@ public interface CpasTarget {
     @Nullable
     ArmorPanelWidget cpas$getArmorPanel();
 
+    void cpas$setEditorScreen(EditorScreenWidget editorScreen);
+
+    void cpas$setArmorPanel(ArmorPanelWidget armorPanel);
+
 }

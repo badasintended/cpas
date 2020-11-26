@@ -3,7 +3,7 @@
   "key.cpas.editor"    : "Open Editor",
 
   "editor.cpas.title"  : "Armor Slots Editor",
-  "editor.cpas.id"     : "Screen ID: §b%s",
+  "editor.cpas.id"     : "Screen Class: §b%s",
   "editor.cpas.version": "cpas v§d%s",
   "editor.cpas.exit"   : "Press §6%s§r to save and exit editor",
   "editor.cpas.enabled": "Enabled",
