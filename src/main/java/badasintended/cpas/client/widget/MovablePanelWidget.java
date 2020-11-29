@@ -17,8 +17,8 @@ public class MovablePanelWidget extends AbstractPanelWidget {
         distanceX = 0,
         distanceY = 0;
 
-    public MovablePanelWidget(int x, int y, int width, int height) {
-        super(x, y, width, height);
+    public MovablePanelWidget(int x, int y) {
+        super(x, y, 32, 5 * 18 + 18);
     }
 
     @Override

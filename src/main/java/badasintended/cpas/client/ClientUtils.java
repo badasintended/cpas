@@ -1,10 +1,12 @@
 package badasintended.cpas.client;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import badasintended.cpas.api.SlotType;
 import badasintended.cpas.client.api.CpasTarget;
 import badasintended.cpas.client.toast.HelpToast;
+import badasintended.cpas.client.widget.AbstractPanelWidget;
 import badasintended.cpas.client.widget.ArmorPanelWidget;
 import badasintended.cpas.client.widget.ArmorSlotWidget;
 import badasintended.cpas.client.widget.EditorScreenWidget;
@@ -12,6 +14,8 @@ import badasintended.cpas.client.widget.TrinketSlotWidget;
 import badasintended.cpas.config.CpasConfig;
 import badasintended.cpas.mixin.AccessorHandledScreen;
 import io.netty.buffer.Unpooled;
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.BaseBoundsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -151,23 +155,41 @@ public final class ClientUtils {
                 target.cpas$setEditorScreen(new EditorScreenWidget(scaledW, scaledH, entry, handledScreen));
 
                 if (entry.isEnabled()) {
-                    int panelX;
-                    int panelY;
-
-                    if (entry.isAuto()) {
-                        panelX = accessor.getX() - 35;
-                        panelY = accessor.getY() + accessor.getBackgroundHeight() - ((5 * 18) + 18);
-                    } else {
-                        panelX = scaledW / 2 + entry.getX();
-                        panelY = scaledH / 2 + entry.getY();
-                    }
-
-                    target.cpas$setArmorPanel(new ArmorPanelWidget(panelX, panelY, 32, 5 * 18 + 18, accessor.getPlayerInventory()));
+                    target.cpas$setArmorPanel(panel(handledScreen, entry, (x, y) -> new ArmorPanelWidget(x, y, accessor.getPlayerInventory())));
                 } else {
                     target.cpas$setArmorPanel(null);
                 }
             }
         }
+    }
+
+    public static <T extends AbstractPanelWidget> T panel(HandledScreen<?> screen, CpasConfig.Entry entry, BiFunction<Integer, Integer, T> func) {
+        AccessorHandledScreen accessor = (AccessorHandledScreen) screen;
+
+        int scaledW = client().getWindow().getScaledWidth(),
+            scaledH = client().getWindow().getScaledHeight();
+        int panelX, panelY;
+
+        if (entry.isAuto()) {
+            panelX = accessor.getX() - 35;
+            panelY = accessor.getY() + accessor.getBackgroundHeight() - ((5 * 18) + 18);
+
+            if (hasMod("roughlyenoughitems")) {
+                for (Rectangle zone : BaseBoundsHandler.getInstance().getExclusionZones(screen.getClass())) {
+                    if (
+                        ((zone.getMinX() < panelX && panelX < zone.getMaxX()) || (panelX < zone.getMinX() && zone.getMinX() < panelX + 32))
+                            && ((zone.getMinY() < panelY && panelY < zone.getMaxY()) || (panelY < zone.getMinY() && zone.getMinY() < panelY + 108))
+                    ) {
+                        panelX = zone.getMinX() - 35;
+                    }
+                }
+            }
+        } else {
+            panelX = scaledW / 2 + entry.getX();
+            panelY = scaledH / 2 + entry.getY();
+        }
+
+        return func.apply(panelX, panelY);
     }
 
 }

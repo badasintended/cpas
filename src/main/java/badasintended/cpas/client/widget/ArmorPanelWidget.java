@@ -10,8 +10,8 @@ import static badasintended.cpas.client.ClientUtils.createArmorSlot;
 @Environment(EnvType.CLIENT)
 public class ArmorPanelWidget extends AbstractPanelWidget {
 
-    public ArmorPanelWidget(int x, int y, int width, int height, PlayerInventory playerInventory) {
-        super(x, y, width, height);
+    public ArmorPanelWidget(int x, int y, PlayerInventory playerInventory) {
+        super(x, y, 32, 5 * 18 + 18);
 
         for (int i = 0; i < 4; i++) {
             children().add(createArmorSlot(x + 7, i * 18 + y + 7, playerInventory, SlotType.of(i)));

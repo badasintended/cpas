@@ -3,7 +3,6 @@ package badasintended.cpas.client.widget;
 import badasintended.cpas.Cpas;
 import badasintended.cpas.client.CpasClient;
 import badasintended.cpas.config.CpasConfig;
-import badasintended.cpas.mixin.AccessorHandledScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -13,6 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import static badasintended.cpas.client.ClientUtils.drawText;
 import static badasintended.cpas.client.ClientUtils.getScreenName;
 import static badasintended.cpas.client.ClientUtils.injectCpasWidget;
+import static badasintended.cpas.client.ClientUtils.panel;
 import static badasintended.cpas.client.ClientUtils.textRenderer;
 
 @Environment(EnvType.CLIENT)
@@ -21,7 +21,6 @@ public class EditorScreenWidget extends AbstractParentWidget {
     private final int scaledW, scaledH;
     private final CpasConfig.Entry entry;
     private final HandledScreen<?> screen;
-    private final AccessorHandledScreen accessor;
     private final String screenName;
 
     private boolean enabled;
@@ -36,7 +35,6 @@ public class EditorScreenWidget extends AbstractParentWidget {
         this.scaledH = scaledH;
         this.entry = entry;
         this.screen = screen;
-        this.accessor = (AccessorHandledScreen) screen;
         this.screenName = getScreenName(screen);
     }
 
@@ -49,20 +47,10 @@ public class EditorScreenWidget extends AbstractParentWidget {
             int minX = 20,
                 minY = 20;
 
-            int panelX, panelY;
-
             enabled = entry.isEnabled();
             auto = entry.isAuto();
 
-            if (entry.isAuto()) {
-                panelX = accessor.getX() - 35;
-                panelY = accessor.getY() + accessor.getBackgroundHeight() - ((5 * 18) + 18);
-            } else {
-                panelX = scaledW / 2 + entry.getX();
-                panelY = scaledH / 2 + entry.getY();
-            }
-
-            panel = new MovablePanelWidget(panelX, panelY, 32, 5 * 18 + 18);
+            panel = panel(screen, entry, MovablePanelWidget::new);
 
             ToggleButtonWidget autoButton = new ToggleButtonWidget(minX, minY + 50, b -> {
                 auto = b;
