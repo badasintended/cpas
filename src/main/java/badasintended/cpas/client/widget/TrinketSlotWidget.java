@@ -1,5 +1,7 @@
 package badasintended.cpas.client.widget;
 
+import java.util.Arrays;
+
 import badasintended.cpas.Cpas;
 import badasintended.cpas.api.SlotType;
 import dev.emi.trinkets.api.TrinketSlots;
@@ -43,7 +45,7 @@ public class TrinketSlotWidget extends ArmorSlotWidget {
         int j = 0;
         for (TrinketSlots.SlotGroup slotGroup : TrinketSlots.slotGroups) {
             for (TrinketSlots.Slot trinketSlot : slotGroup.slots) {
-                if (slotGroup.getName().equals(slot.trinketId)) {
+                if (Arrays.stream(slot.trinketIds).anyMatch(it -> it.equals(slotGroup.getName()))) {
                     trinketSlots.put(j, trinketSlot);
                     trinketSlotNumbers.put(trinketSlot, i);
                     j++;
@@ -85,7 +87,7 @@ public class TrinketSlotWidget extends ArmorSlotWidget {
                 bind();
                 drawNinePatch(matrices, trinketX, y, 18, 18, 16, 0, 1, 14);
 
-                ItemStack trinketStack = TrinketsApi.getTrinketComponent(player).getStack(slot.trinketId, trinketSlot.getName());
+                ItemStack trinketStack = TrinketsApi.getTrinketComponent(player).getStack(trinketSlot.getSlotGroup().getName(), trinketSlot.getName());
 
                 if (trinketSlot == hoveredSlot) {
                     hoveredStack = trinketStack;

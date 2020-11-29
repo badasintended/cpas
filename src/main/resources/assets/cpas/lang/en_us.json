@@ -1,6 +1,6 @@
 {
   "key.cpas"           : "Conveniently Placed Armor Slots",
-  "key.cpas.editor"    : "Open Editor",
+  "key.cpas.editor"    : "Open Editor (Requires Ctrl)",
 
   "editor.cpas.title"  : "Armor Slots Editor",
   "editor.cpas.id"     : "Screen Class: §b%s",
@@ -9,5 +9,5 @@
   "editor.cpas.enabled": "Enabled",
   "editor.cpas.auto"   : "Auto",
 
-  "tutorial.cpas"      : "Press %s to open armor slot editor"
+  "tutorial.cpas"      : "Press Ctrl+%s to open armor slot editor"
 }
