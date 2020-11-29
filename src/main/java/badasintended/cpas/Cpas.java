@@ -1,7 +1,5 @@
 package badasintended.cpas;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
@@ -12,7 +10,6 @@ import static badasintended.cpas.Utils.equipTrinket;
 import static badasintended.cpas.Utils.hasMod;
 import static badasintended.cpas.Utils.slotClick;
 
-@Environment(EnvType.CLIENT)
 public class Cpas implements ModInitializer {
 
     public static final String MOD_ID = "cpas";
