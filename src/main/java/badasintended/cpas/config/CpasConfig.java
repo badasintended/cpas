@@ -74,6 +74,8 @@ public final class CpasConfig {
 
     private boolean showHelp = true;
 
+    public final Debug debug = new Debug();
+
     private Map<String, Entry> entries = new HashMap<>();
 
     public void setEntries(Map<String, Entry> entries) {
@@ -90,6 +92,20 @@ public final class CpasConfig {
 
     public void setShowHelp(boolean showHelp) {
         this.showHelp = showHelp;
+    }
+
+    public static class Debug {
+
+        private boolean backgroundOverlay = false;
+
+        public boolean isBackgroundOverlay() {
+            return backgroundOverlay;
+        }
+
+        public void setBackgroundOverlay(boolean backgroundOverlay) {
+            this.backgroundOverlay = backgroundOverlay;
+        }
+
     }
 
     public static class Entry {
