@@ -3,7 +3,6 @@ package badasintended.cpas.mixin;
 import badasintended.cpas.client.api.CpasTarget;
 import badasintended.cpas.client.widget.ArmorPanelWidget;
 import badasintended.cpas.client.widget.EditorScreenWidget;
-import badasintended.cpas.config.CpasConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -17,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import static net.minecraft.client.gui.DrawableHelper.fill;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer {
@@ -55,8 +52,6 @@ public abstract class MixinGameRenderer {
                     armorPanel.render(matrixStack, i, j, delta);
                 }
             }
-            if (CpasConfig.get().debug.isBackgroundOverlay())
-                fill(matrixStack, a.getX(), a.getY(), a.getX() + a.getBackgroundWidth(), a.getY() + a.getBackgroundHeight(), 0x44FF00FF);
         }
     }
 

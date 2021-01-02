@@ -4,7 +4,9 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import badasintended.cpas.Cpas;
 import com.google.gson.Gson;
@@ -50,6 +52,7 @@ public final class CpasConfig {
                 e.printStackTrace();
                 throw new JsonParseException(new IllegalArgumentException());
             }
+            save();
         }
         return config;
     }
@@ -72,18 +75,39 @@ public final class CpasConfig {
         return config.entries.get(name);
     }
 
-    private boolean showHelp = true;
-
-    public final Debug debug = new Debug();
-
-    private Map<String, Entry> entries = new HashMap<>();
-
-    public void setEntries(Map<String, Entry> entries) {
-        this.entries = entries;
+    public static Set<String> getTrinketGroups(String slot) {
+        Map<String, Set<String>> groups = get().trinketSlotGroups;
+        if (!groups.containsKey(slot)) {
+            groups.put(slot, new HashSet<>());
+            save();
+        }
+        return groups.get(slot);
     }
 
-    public Map<String, Entry> getEntries() {
-        return entries;
+
+    // ----------------------------------------------------------------------------------
+
+
+    private boolean showHelp = true;
+
+    public final Map<String, Set<String>> trinketSlotGroups = new HashMap<>();
+
+    public Map<String, Entry> entries = new HashMap<>();
+
+    public CpasConfig() {
+        Set<String> head = trinketSlotGroups.computeIfAbsent("head", s -> new HashSet<>());
+        Set<String> chest = trinketSlotGroups.computeIfAbsent("chest", s -> new HashSet<>());
+        Set<String> legs = trinketSlotGroups.computeIfAbsent("legs", s -> new HashSet<>());
+        Set<String> feet = trinketSlotGroups.computeIfAbsent("feet", s -> new HashSet<>());
+        Set<String> offhand = trinketSlotGroups.computeIfAbsent("offhand", s -> new HashSet<>());
+
+        head.add("head");
+        chest.add("chest");
+        chest.add("heartcanisters");
+        legs.add("legs");
+        feet.add("feet");
+        offhand.add("hand");
+        offhand.add("offhand");
     }
 
     public boolean isShowHelp() {
@@ -92,20 +116,6 @@ public final class CpasConfig {
 
     public void setShowHelp(boolean showHelp) {
         this.showHelp = showHelp;
-    }
-
-    public static class Debug {
-
-        private boolean backgroundOverlay = false;
-
-        public boolean isBackgroundOverlay() {
-            return backgroundOverlay;
-        }
-
-        public void setBackgroundOverlay(boolean backgroundOverlay) {
-            this.backgroundOverlay = backgroundOverlay;
-        }
-
     }
 
     public static class Entry {

@@ -1,9 +1,8 @@
 package badasintended.cpas.client.widget;
 
-import java.util.Arrays;
-
 import badasintended.cpas.Cpas;
 import badasintended.cpas.api.SlotType;
+import badasintended.cpas.config.CpasConfig;
 import dev.emi.trinkets.api.TrinketSlots;
 import dev.emi.trinkets.api.TrinketsApi;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -45,7 +44,7 @@ public class TrinketSlotWidget extends ArmorSlotWidget {
         int j = 0;
         for (TrinketSlots.SlotGroup slotGroup : TrinketSlots.slotGroups) {
             for (TrinketSlots.Slot trinketSlot : slotGroup.slots) {
-                if (Arrays.stream(slot.trinketIds).anyMatch(it -> it.equals(slotGroup.getName()))) {
+                if (CpasConfig.getTrinketGroups(slot.id).stream().anyMatch(it -> it.equals(slotGroup.getName()))) {
                     trinketSlots.put(j, trinketSlot);
                     trinketSlotNumbers.put(trinketSlot, i);
                     j++;
@@ -115,7 +114,7 @@ public class TrinketSlotWidget extends ArmorSlotWidget {
     public void renderToolTip(MatrixStack matrices, int mouseX, int mouseY) {
         if (wasHovered) {
             matrices.push();
-            matrices.translate(0, 0, 200);
+            matrices.translate(0, 0, 300);
             itemRenderer().zOffset += 200;
 
             fill(matrices, hoveredX + 1, y + 1, hoveredX + 17, y + 17, 0x80ffffff);

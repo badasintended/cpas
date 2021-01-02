@@ -79,7 +79,7 @@ public abstract class AbstractParentWidget extends AbstractButtonWidget implemen
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return super.isMouseOver(mouseX, mouseY) || hoveredElement(mouseX, mouseY).isPresent();
+        return visible && (super.isMouseOver(mouseX, mouseY) || hoveredElement(mouseX, mouseY).isPresent());
     }
 
     @Override
