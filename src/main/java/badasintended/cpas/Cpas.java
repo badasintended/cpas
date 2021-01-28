@@ -1,8 +1,7 @@
 package badasintended.cpas;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.PacketConsumer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
@@ -30,17 +29,17 @@ public class Cpas implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        s(ARMOR_SLOT_CLICK, (ctx, buf) -> {
+        s(ARMOR_SLOT_CLICK, (server, player, handler, buf, sender) -> {
             int slot = buf.readVarInt();
 
-            ctx.getTaskQueue().execute(() -> slotClick(ctx.getPlayer(), slot));
+            server.execute(() -> slotClick(player, slot));
         });
 
         if (hasMod("trinkets")) {
-            s(TRINKET_SLOT_CLICK, (ctx, buf) -> {
+            s(TRINKET_SLOT_CLICK, (server, player, handler, buf, sender) -> {
                 int slot = buf.readVarInt();
 
-                ctx.getTaskQueue().execute(() -> equipTrinket(ctx.getPlayer(), slot));
+                server.execute(() -> equipTrinket(player, slot));
             });
         }
 
@@ -50,8 +49,8 @@ public class Cpas implements ModInitializer {
             .ifPresent(mod -> version = mod.getMetadata().getVersion().getFriendlyString());
     }
 
-    private void s(Identifier id, PacketConsumer consumer) {
-        ServerSidePacketRegistry.INSTANCE.register(id, consumer);
+    private void s(Identifier id, ServerPlayNetworking.PlayChannelHandler consumer) {
+        ServerPlayNetworking.registerGlobalReceiver(id, consumer);
     }
 
 }

@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.options.KeyBinding;
 import org.lwjgl.glfw.GLFW;
 
@@ -17,6 +18,10 @@ public class CpasClient implements ClientModInitializer {
     public void onInitializeClient() {
         KeyBindingHelper.registerKeyBinding(EDIT);
         CpasConfig.get();
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            ClientUtils.injectCpasWidget(screen, scaledWidth, scaledHeight);
+        });
     }
+
 
 }

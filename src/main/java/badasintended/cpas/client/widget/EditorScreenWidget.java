@@ -83,7 +83,7 @@ public class EditorScreenWidget extends AbstractParentWidget {
             entry.setX(panel.x - scaledW / 2);
             entry.setY(panel.y - scaledH / 2);
             CpasConfig.save();
-            injectCpasWidget(screen);
+            injectCpasWidget(screen, scaledW, scaledH);
         }
     }
 

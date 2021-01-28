@@ -18,7 +18,9 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.BaseBoundsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -26,12 +28,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -116,14 +118,10 @@ public final class ClientUtils {
             client().currentScreen.renderTooltip(matrices, stack.getTooltip(player, () -> client().options.advancedItemTooltips), x, y);
     }
 
-    public static void c2s(Packet<?> packet) {
-        ClientSidePacketRegistry.INSTANCE.sendToServer(packet);
-    }
-
     public static void c2s(Identifier id, Consumer<PacketByteBuf> consumer) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         consumer.accept(buf);
-        ClientSidePacketRegistry.INSTANCE.sendToServer(id, buf);
+        ClientPlayNetworking.send(id, buf);
     }
 
     public static ArmorSlotWidget createArmorSlot(int x, int y, PlayerInventory inventory, SlotType slot) {
@@ -134,16 +132,13 @@ public final class ClientUtils {
         return screen.getClass().getName();
     }
 
-    public static void injectCpasWidget(Screen screen) {
+    public static void injectCpasWidget(Screen screen, int scaledW, int scaledH) {
         if (screen instanceof HandledScreen<?>) {
             if (CpasConfig.get().isShowHelp()) {
                 client().getToastManager().add(new HelpToast());
                 CpasConfig.get().setShowHelp(false);
                 CpasConfig.save();
             }
-
-            int scaledW = client().getWindow().getScaledWidth();
-            int scaledH = client().getWindow().getScaledHeight();
 
             CpasTarget target = (CpasTarget) screen;
             HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
@@ -160,7 +155,36 @@ public final class ClientUtils {
                     target.cpas$setArmorPanel(null);
                 }
             }
+
+            ScreenEvents.afterRender(screen).register(ClientUtils::renderCpas);
+
+            ScreenKeyboardEvents.allowKeyPress(screen).register(ClientUtils::onKey);
         }
+    }
+
+    public static void renderCpas(Screen screen, MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
+        EditorScreenWidget editorScreen = ((CpasTarget) screen).cpas$getEditorScreen();
+        ArmorPanelWidget armorPanel = ((CpasTarget) screen).cpas$getArmorPanel();
+
+        if (screen instanceof RecipeBookProvider && armorPanel != null) {
+            armorPanel.visible = !((RecipeBookProvider) screen).getRecipeBookWidget().isOpen();
+        }
+
+        if (editorScreen != null) {
+            editorScreen.render(matrices, mouseX, mouseY, tickDelta);
+            if (armorPanel != null && !editorScreen.visible) {
+                armorPanel.render(matrices, mouseX, mouseY, tickDelta);
+            }
+        }
+    }
+
+    public static boolean onKey(Screen screen, int key, int scancode, int modifier) {
+        EditorScreenWidget editor = ((CpasTarget) screen).cpas$getEditorScreen();
+        if (editor != null && CpasClient.EDIT.matchesKey(key, scancode) && (editor.visible || Screen.hasControlDown())) {
+            editor.toggle();
+            return false;
+        }
+        return true;
     }
 
     public static <T extends AbstractPanelWidget> T panel(HandledScreen<?> screen, CpasConfig.Entry entry, BiFunction<Integer, Integer, T> func) {

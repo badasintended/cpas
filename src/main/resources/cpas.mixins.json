@@ -8,10 +8,7 @@
   "client"            : [
     "AccessorHandledScreen",
     "MixinConfigObjectImpl",
-    "MixinGameRenderer",
     "MixinHandledScreen",
-    "MixinKeyboard",
-    "MixinMinecraftClient",
     "MixinMouse"
   ],
   "injectors"         : {
