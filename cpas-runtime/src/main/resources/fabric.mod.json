@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id"           : "cpas-runtime",
+  "version"      : "${version}",
+  "authors"      : ["deirn"],
+  "icon"         : "assets/cpas/icon.png",
+  "entrypoints"  : {
+    "main"  : ["badasintended.cpas.runtime.Cpas"],
+    "client": ["badasintended.cpas.runtime.CpasClient"]
+  },
+  "mixins"       : ["cpas.mixins.json"],
+  "depends"      : {
+    "cpas-api": "*"
+  },
+  "custom"       : {
+    "modmenu": {
+      "parent": "cpas"
+    }
+  }
+}

@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id"           : "cpas",
   "version"      : "${version}",
-  "name"         : "conveniently placed armor slots",
   "description"  : "adds armor slots to any container for easy access",
   "authors"      : ["deirn"],
   "contact"      : {
@@ -12,16 +11,10 @@
   },
   "license"      : "MIT",
   "icon"         : "assets/cpas/icon.png",
-  "mixins"       : ["cpas.mixins.json"],
   "environment"  : "*",
-  "entrypoints"  : {
-    "main"       : ["badasintended.cpas.Cpas"],
-    "client"     : ["badasintended.cpas.client.CpasClient"],
-    "rei_plugins": ["badasintended.cpas.client.rei.CpasReiPlugin"]
-  },
   "depends"      : {
     "fabricloader": ">=0.7.4",
     "fabric"      : ">=0.30.0",
-    "minecraft"   : "1.16.x"
+    "minecraft"   : "1.17.x"
   }
 }

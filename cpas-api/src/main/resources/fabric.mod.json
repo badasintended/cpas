@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id"           : "cpas-api",
+  "version"      : "${version}",
+  "authors"      : ["deirn"],
+  "icon"         : "assets/cpas/icon.png",
+  "custom"       : {
+    "modmenu": {
+      "parent": "cpas"
+    }
+  }
+}

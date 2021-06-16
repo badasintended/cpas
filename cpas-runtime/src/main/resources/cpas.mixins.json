@@ -1,0 +1,17 @@
+{
+  "required"          : true,
+  "minVersion"        : "0.8",
+  "package"           : "badasintended.cpas.runtime.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "priority"          : 999,
+  "mixins"            : [],
+  "client"            : [
+    "AccessorHandledScreen",
+    "AccessorScreen",
+    "MixinHandledScreen",
+    "MixinMouse"
+  ],
+  "injectors"         : {
+    "defaultRequire": 1
+  }
+}

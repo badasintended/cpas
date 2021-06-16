@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id"           : "cpas-trinkets",
+  "version"      : "${version}",
+  "description"  : "Compatibility plugin for Trinkets API",
+  "authors"      : ["deirn"],
+  "icon"         : "assets/cpas/icon.png",
+  "entrypoints"  : {
+    "cpas": ["badasintended.cpas.compat.trinkets.CpasTrinkets"]
+  },
+  "depends"      : {
+    "cpas-api": "*",
+    "trinkets": "3.x"
+  },
+  "custom"       : {
+    "modmenu": {
+      "parent": "cpas"
+    }
+  }
+}
