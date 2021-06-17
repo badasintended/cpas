@@ -23,6 +23,7 @@ public class CpasTrinketSlot implements CpasSlot {
 
     @Nullable
     private TrinketInventory inventory;
+    private SlotReference slotRef;
 
     CpasTrinketSlot(String groupId, String slotId, SlotType slot, int index) {
         this.groupId = groupId;
@@ -35,8 +36,11 @@ public class CpasTrinketSlot implements CpasSlot {
     public void setupContext(PlayerEntity player) {
         this.player = player;
         this.inventory = null;
-        TrinketsApi.getTrinketComponent(player).ifPresent(component ->
-            inventory = component.getInventory().get(groupId).get(slotId));
+        this.slotRef = null;
+        TrinketsApi.getTrinketComponent(player).ifPresent(component -> {
+            inventory = component.getInventory().get(groupId).get(slotId);
+            slotRef = new SlotReference(inventory, index);
+        });
     }
 
     @NotNull
@@ -53,7 +57,7 @@ public class CpasTrinketSlot implements CpasSlot {
 
     @Override
     public boolean canEquip(ItemStack stack) {
-        return inventory != null && TrinketSlot.canInsert(stack, new SlotReference(inventory, index), player);
+        return inventory != null && TrinketSlot.canInsert(stack, slotRef, player);
     }
 
     @Override
