@@ -156,17 +156,11 @@ public class ArmorSlotWidget extends FakeButtonWidget {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (hoveredSlot != null) {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeEnumConstant(type);
-            buf.writeIdentifier(slots.getId(hoveredSlot));
-            ClientPlayNetworking.send(Cpas.SLOT_CLICK, buf);
-        } else {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeEnumConstant(type);
-            buf.writeIdentifier(Cpas.REGULAR_SLOT);
-            ClientPlayNetworking.send(Cpas.SLOT_CLICK, buf);
-        }
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeVarInt(handler.syncId);
+        buf.writeEnumConstant(type);
+        buf.writeIdentifier(hoveredSlot == null ? Cpas.REGULAR_SLOT : slots.getId(hoveredSlot));
+        ClientPlayNetworking.send(Cpas.SLOT_CLICK, buf);
     }
 
     @Override
