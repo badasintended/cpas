@@ -16,9 +16,10 @@ allprojects {
     version = rootProject.version
 
     dependencies {
-        "minecraft"("com.mojang:minecraft:${rootProp["minecraft"]}")
-        "mappings"("net.fabricmc:yarn:${rootProp["yarn"]}:v2")
-        "modImplementation"("net.fabricmc:fabric-loader:${rootProp["loader"]}")
+        minecraft("com.mojang:minecraft:${rootProp["minecraft"]}")
+        mappings("net.fabricmc:yarn:${rootProp["yarn"]}:v2")
+
+        modImplementation("net.fabricmc:fabric-loader:${rootProp["loader"]}")
     }
 
     java {

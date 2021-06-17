@@ -6,7 +6,8 @@
   "icon"         : "assets/cpas/icon.png",
   "entrypoints"  : {
     "main"  : ["badasintended.cpas.runtime.Cpas"],
-    "client": ["badasintended.cpas.runtime.CpasClient"]
+    "client": ["badasintended.cpas.runtime.CpasClient"],
+    "rei"   : ["badasintended.cpas.runtime.rei.CpasReiPlugin"]
   },
   "mixins"       : ["cpas.mixins.json"],
   "depends"      : {

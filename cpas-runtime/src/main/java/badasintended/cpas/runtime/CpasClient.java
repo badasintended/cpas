@@ -1,12 +1,11 @@
 package badasintended.cpas.runtime;
 
-import badasintended.cpas.runtime.mixin.AccessorScreen;
-
 import java.util.function.BiFunction;
 
 import badasintended.cpas.runtime.config.CpasConfig;
 import badasintended.cpas.runtime.duck.CpasTarget;
 import badasintended.cpas.runtime.mixin.AccessorHandledScreen;
+import badasintended.cpas.runtime.mixin.AccessorScreen;
 import badasintended.cpas.runtime.toast.HelpToast;
 import badasintended.cpas.runtime.widget.AbstractPanelWidget;
 import badasintended.cpas.runtime.widget.ArmorPanelWidget;
@@ -35,6 +34,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -46,6 +46,9 @@ public class CpasClient implements ClientModInitializer {
     private static final Identifier GUI_TEXTURE = new Identifier("cpas", "textures/gui/gui.png");
 
     private static boolean pluginLoaded = false;
+
+    @Nullable
+    public static AutoPlacer autoPlacer = null;
 
     @Override
     public void onInitializeClient() {
@@ -179,16 +182,9 @@ public class CpasClient implements ClientModInitializer {
             panelX = accessor.getX() - 35;
             panelY = accessor.getY() + accessor.getBackgroundHeight() - ((5 * 18) + 18);
 
-            /*if (FabricLoader.getInstance().getModContainer("roughlyenoughitems").isPresent()) {
-                for (Rectangle zone : BaseBoundsHandler.getInstance().getExclusionZones(screen.getClass())) {
-                    if (
-                        ((zone.getMinX() < panelX && panelX < zone.getMaxX()) || (panelX < zone.getMinX() && zone.getMinX() < panelX + 32))
-                            && ((zone.getMinY() < panelY && panelY < zone.getMaxY()) || (panelY < zone.getMinY() && zone.getMinY() < panelY + 108))
-                    ) {
-                        panelX = zone.getMinX() - 35;
-                    }
-                }
-            }*/
+            if (autoPlacer != null) {
+                panelX = autoPlacer.getX(screen, panelX, panelY);
+            }
         } else {
             panelX = scaledW / 2 + entry.getX();
             panelY = scaledH / 2 + entry.getY();
@@ -220,6 +216,13 @@ public class CpasClient implements ClientModInitializer {
             return false;
         }
         return true;
+    }
+
+    @FunctionalInterface
+    public interface AutoPlacer {
+
+        int getX(Screen screen, int x, int y);
+
     }
 
 }

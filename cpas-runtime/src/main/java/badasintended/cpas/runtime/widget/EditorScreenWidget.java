@@ -2,11 +2,13 @@ package badasintended.cpas.runtime.widget;
 
 import badasintended.cpas.runtime.CpasClient;
 import badasintended.cpas.runtime.config.CpasConfig;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import org.jetbrains.annotations.Nullable;
 
 import static badasintended.cpas.runtime.CpasClient.drawText;
 import static badasintended.cpas.runtime.CpasClient.getTextRenderer;
@@ -15,6 +17,9 @@ import static badasintended.cpas.runtime.CpasClient.panel;
 
 @Environment(EnvType.CLIENT)
 public class EditorScreenWidget extends AbstractParentWidget {
+
+    @Nullable
+    public static BooleanConsumer onVisibilityChanged = null;
 
     private final int scaledW, scaledH;
     private final CpasConfig.Entry entry;
@@ -38,6 +43,10 @@ public class EditorScreenWidget extends AbstractParentWidget {
 
     public void toggle() {
         visible = !visible;
+
+        if (onVisibilityChanged != null) {
+            onVisibilityChanged.accept(visible);
+        }
 
         children().clear();
 
