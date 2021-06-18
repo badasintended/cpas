@@ -34,13 +34,15 @@ public class CpasTrinketSlot implements CpasSlot {
 
     @Override
     public void setupContext(PlayerEntity player) {
-        this.player = player;
-        this.inventory = null;
-        this.slotRef = null;
-        TrinketsApi.getTrinketComponent(player).ifPresent(component -> {
-            inventory = component.getInventory().get(groupId).get(slotId);
-            slotRef = new SlotReference(inventory, index);
-        });
+        if (this.player != player) {
+            this.player = player;
+            this.inventory = null;
+            this.slotRef = null;
+            TrinketsApi.getTrinketComponent(player).ifPresent(component -> {
+                inventory = component.getInventory().get(groupId).get(slotId);
+                slotRef = new SlotReference(inventory, index);
+            });
+        }
     }
 
     @NotNull
