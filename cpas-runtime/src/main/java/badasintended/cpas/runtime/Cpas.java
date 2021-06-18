@@ -54,16 +54,18 @@ public class Cpas implements ModInitializer {
                     ItemStack cursor = currentScreenHandler.getCursorStack();
                     if (slotId.equals(REGULAR_SLOT)) {
                         if (cursor.isEmpty() || type.equipmentSlot == null || type.equipmentSlot == MobEntity.getPreferredEquipmentSlot(cursor)) {
-                            currentScreenHandler.setCursorStack(player.getInventory().getStack(type.inventoryId).copy());
-                            inventory.setStack(type.inventoryId, cursor.copy());
+                            currentScreenHandler.setCursorStack(player.getInventory().getStack(type.inventoryId));
+                            inventory.setStack(type.inventoryId, cursor);
                             playerScreenHandler.syncState();
                         }
                     } else {
                         CpasSlot slot = CpasRegistrarImpl.REGISTRY.get(type).get(slotId);
-                        if (slot != null && (cursor.isEmpty() || slot.canEquip(cursor))) {
+                        if (slot != null) {
                             slot.setupContext(player);
-                            currentScreenHandler.setCursorStack(slot.setStack(cursor.copy()).copy());
-                            playerScreenHandler.syncState();
+                            if (cursor.isEmpty() || slot.canEquip(cursor)) {
+                                currentScreenHandler.setCursorStack(slot.setStack(cursor));
+                                playerScreenHandler.syncState();
+                            }
                         }
                     }
                 }
