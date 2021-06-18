@@ -13,9 +13,8 @@ public class MovablePanelWidget extends AbstractPanelWidget {
     public boolean enabled = false;
 
     private boolean wasClicked = false;
-    private int
-        distanceX = 0,
-        distanceY = 0;
+    private int distanceX = 0;
+    private int distanceY = 0;
 
     public MovablePanelWidget(int x, int y) {
         super(x, y, 32, 5 * 18 + 18);

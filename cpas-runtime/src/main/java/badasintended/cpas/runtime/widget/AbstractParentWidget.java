@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +18,7 @@ import static badasintended.cpas.runtime.CpasClient.getItemRenderer;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractParentWidget extends FakeButtonWidget implements ParentElement {
 
-    private final List<ButtonWidget> children = new ArrayList<>();
+    private final List<ClickableWidget> children = new ArrayList<>();
 
     private Element focused = null;
     private boolean dragging = false;
@@ -60,7 +61,7 @@ public abstract class AbstractParentWidget extends FakeButtonWidget implements P
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        for (ButtonWidget child : children) {
+        for (ClickableWidget child : children) {
             if (child.mouseClicked(mouseX, mouseY, button))
                 return true;
         }
@@ -69,7 +70,7 @@ public abstract class AbstractParentWidget extends FakeButtonWidget implements P
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        for (ButtonWidget child : children) {
+        for (ClickableWidget child : children) {
             if (child.mouseReleased(mouseX, mouseY, button))
                 return true;
         }
@@ -82,7 +83,7 @@ public abstract class AbstractParentWidget extends FakeButtonWidget implements P
     }
 
     @Override
-    final public List<ButtonWidget> children() {
+    final public List<ClickableWidget> children() {
         return children;
     }
 

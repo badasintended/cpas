@@ -21,13 +21,13 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -38,6 +38,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import static net.minecraft.client.gui.DrawableHelper.drawTexture;
 
 @Environment(EnvType.CLIENT)
 public class CpasClient implements ClientModInitializer {
@@ -93,35 +94,27 @@ public class CpasClient implements ClientModInitializer {
         RenderSystem.setShaderTexture(0, id);
     }
 
-    public static void drawNinePatch(MatrixStack matrices, int x, int y, int w, int h, float u, float v, int ltrb, int cm) {
-        drawNinePatch(matrices, x, y, w, h, u, v, ltrb, cm, ltrb);
-    }
+    public static void drawNinePatch(MatrixStack matrices, int x, int y, int w, int h, float u, float v, int s, int c) {
+        drawTexture(matrices, x, y, s, s, u, v, s, s, 256, 256);
+        drawTexture(matrices, x + s, y, w - s - s, s, u + s, v, c, s, 256, 256);
+        drawTexture(matrices, x + w - s, y, s, s, u + s + c, v, s, s, 256, 256);
 
-    public static void drawNinePatch(MatrixStack matrices, int x, int y, int w, int h, float u, float v, int lt, int cm, int rb) {
-        drawNinePatch(matrices, x, y, w, h, u, v, lt, cm, rb, lt, cm, rb);
-    }
+        drawTexture(matrices, x, y + s, s, h - s - s, u, v + s, s, c, 256, 256);
+        drawTexture(matrices, x + s, y + s, w - s - s, h - s - s, u + s, v + s, c, c, 256, 256);
+        drawTexture(matrices, x + w - s, y + s, s, h - s - s, u + s + c, v + s, s, c, 256, 256);
 
-    public static void drawNinePatch(MatrixStack matrices, int x, int y, int w, int h, float u, float v, int l, int c, int r, int t, int m, int b) {
-        DrawableHelper.drawTexture(matrices, x, y, l, t, u, v, l, t, 256, 256);
-        DrawableHelper.drawTexture(matrices, x + l, y, w - l - r, t, u + l, v, c, t, 256, 256);
-        DrawableHelper.drawTexture(matrices, x + w - r, y, r, t, u + l + c, v, r, t, 256, 256);
-
-        DrawableHelper.drawTexture(matrices, x, y + t, l, h - t - b, u, v + t, l, m, 256, 256);
-        DrawableHelper.drawTexture(matrices, x + l, y + t, w - l - r, h - t - b, u + l, v + t, c, m, 256, 256);
-        DrawableHelper.drawTexture(matrices, x + w - r, y + t, r, h - t - b, u + l + c, v + t, r, m, 256, 256);
-
-        DrawableHelper.drawTexture(matrices, x, y + h - b, l, b, u, v + t + m, l, b, 256, 256);
-        DrawableHelper.drawTexture(matrices, x + l, y + h - b, w - l - r, b, u + l, v + t + m, c, b, 256, 256);
-        DrawableHelper.drawTexture(matrices, x + w - r, y + h - b, r, b, u + l + c, v + t + m, r, b, 256, 256);
+        drawTexture(matrices, x, y + h - s, s, s, u, v + s + c, s, s, 256, 256);
+        drawTexture(matrices, x + s, y + h - s, w - s - s, s, u + s, v + s + c, c, s, 256, 256);
+        drawTexture(matrices, x + w - s, y + h - s, s, s, u + s + c, v + s + c, s, s, 256, 256);
     }
 
     public static void drawItem(ItemStack stack, int x, int y) {
-        drawItem(stack, x, y, null);
-    }
+        DiffuseLighting.enableGuiDepthLighting();
 
-    public static void drawItem(ItemStack stack, int x, int y, String text) {
         getItemRenderer().renderGuiItemIcon(stack, x, y);
-        getItemRenderer().renderGuiItemOverlay(getTextRenderer(), stack, x, y, text);
+        getItemRenderer().renderGuiItemOverlay(getTextRenderer(), stack, x, y);
+
+        DiffuseLighting.disableGuiDepthLighting();
     }
 
     @SuppressWarnings("ConstantConditions")

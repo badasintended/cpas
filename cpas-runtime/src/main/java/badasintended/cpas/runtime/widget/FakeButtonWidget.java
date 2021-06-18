@@ -2,12 +2,14 @@ package badasintended.cpas.runtime.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.LiteralText;
 
 @Environment(EnvType.CLIENT)
-public abstract class FakeButtonWidget extends ButtonWidget {
+public abstract class FakeButtonWidget extends ClickableWidget {
 
     private final boolean sound;
 
@@ -16,8 +18,7 @@ public abstract class FakeButtonWidget extends ButtonWidget {
     }
 
     public FakeButtonWidget(int x, int y, int width, int height, boolean sound) {
-        super(x, y, width, height, LiteralText.EMPTY, w -> {
-        });
+        super(x, y, width, height, LiteralText.EMPTY);
         this.sound = sound;
     }
 
@@ -26,6 +27,10 @@ public abstract class FakeButtonWidget extends ButtonWidget {
         if (sound) {
             super.playDownSound(soundManager);
         }
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
     }
 
 }
