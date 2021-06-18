@@ -14,6 +14,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -52,6 +53,8 @@ public class CpasClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        KeyBindingHelper.registerKeyBinding(EDIT);
+
         ClientPlayConnectionEvents.INIT.register((handler, client) -> pluginLoaded = false);
 
         ClientPlayNetworking.registerGlobalReceiver(Cpas.CLEAR_REGISTRY, (client, handler, buf, responseSender) ->
@@ -149,19 +152,16 @@ public class CpasClient implements ClientModInitializer {
 
     public static void injectCpasWidget(Screen s, int scaledWidth, int scaledHeight) {
         if (s instanceof HandledScreen<?> screen) {
-            if (CpasConfig.get().isShowHelp()) {
-                getClient().getToastManager().add(new HelpToast());
-                CpasConfig.get().setShowHelp(false);
-                CpasConfig.get();
-            }
-
             CpasTarget target = (CpasTarget) screen;
-
             if (!(screen instanceof InventoryScreen || screen instanceof CreativeInventoryScreen)) {
+                if (CpasConfig.get().isShowHelp()) {
+                    getClient().getToastManager().add(new HelpToast());
+                    CpasConfig.get().setShowHelp(false);
+                    CpasConfig.save();
+                }
+
                 CpasConfig.Entry entry = CpasConfig.getEntry(screen);
-
                 target.cpas$setEditorScreen(new EditorScreenWidget(scaledWidth, scaledHeight, entry, screen));
-
                 if (entry.isEnabled()) {
                     target.cpas$setArmorPanel(panel(screen, entry, (x, y) -> new ArmorPanelWidget(x, y, getClient().player.getInventory(), screen.getScreenHandler())));
                 } else {

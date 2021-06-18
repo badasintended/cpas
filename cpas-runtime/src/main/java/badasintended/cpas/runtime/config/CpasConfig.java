@@ -36,6 +36,7 @@ public final class CpasConfig {
         CpasConfig config = get();
         if (!config.entries.containsKey(name)) {
             config.entries.put(name, new Entry());
+            save();
         }
         return config.entries.get(name);
     }
