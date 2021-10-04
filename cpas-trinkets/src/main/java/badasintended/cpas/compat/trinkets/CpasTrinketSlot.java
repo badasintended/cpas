@@ -63,6 +63,12 @@ public class CpasTrinketSlot implements CpasSlot {
     }
 
     @Override
+    public boolean canTakeItem() {
+        ItemStack stack = getStack();
+        return inventory != null && TrinketsApi.getTrinket(stack.getItem()).canUnequip(stack, slotRef, player);
+    }
+
+    @Override
     public @NotNull ItemStack setStack(ItemStack stack) {
         if (inventory == null) {
             return stack;

@@ -21,4 +21,8 @@ public interface CpasSlot {
 
     boolean canEquip(ItemStack stack);
 
+    default boolean canTakeItem() {
+        return true;
+    }
+
 }
