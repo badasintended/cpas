@@ -110,11 +110,8 @@ public class CpasClient implements ClientModInitializer {
 
     public static void drawItem(ItemStack stack, int x, int y) {
         DiffuseLighting.enableGuiDepthLighting();
-
         getItemRenderer().renderGuiItemIcon(stack, x, y);
         getItemRenderer().renderGuiItemOverlay(getTextRenderer(), stack, x, y);
-
-        DiffuseLighting.disableGuiDepthLighting();
     }
 
     @SuppressWarnings("ConstantConditions")

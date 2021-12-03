@@ -44,16 +44,16 @@ public abstract class AbstractParentWidget extends FakeButtonWidget implements P
         getItemRenderer().zOffset -= 200;
         matrices.pop();
 
-        renderToolTip(matrices, mouseX, mouseY);
+        renderTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
-    public void renderToolTip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         matrices.push();
         matrices.translate(0, 0, getItemRenderer().zOffset + 250);
         getItemRenderer().zOffset += 250;
 
-        children.forEach(it -> it.renderToolTip(matrices, mouseX, mouseY));
+        children.forEach(it -> it.renderTooltip(matrices, mouseX, mouseY));
 
         getItemRenderer().zOffset -= 250;
         matrices.pop();

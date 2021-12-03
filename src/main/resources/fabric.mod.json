@@ -13,8 +13,8 @@
   "icon"         : "assets/cpas/icon.png",
   "environment"  : "*",
   "depends"      : {
-    "fabricloader": ">=0.7.4",
-    "fabric"      : ">=0.30.0",
-    "minecraft"   : "1.17.x"
+    "fabricloader": ">=0.12",
+    "fabric"      : ">=0.43",
+    "minecraft"   : "1.18.x"
   }
 }

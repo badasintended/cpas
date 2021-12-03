@@ -5,5 +5,6 @@ repositories {
 
 dependencies {
     implementation(project(":cpas-api"))
-    modImplementation("dev.emi:trinkets:${rootProp["trinkets"]}")
+
+    modApi("dev.emi:trinkets:${rootProp["trinkets"]}")
 }

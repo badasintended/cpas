@@ -21,7 +21,6 @@ import static badasintended.cpas.runtime.CpasClient.bindTexture;
 import static badasintended.cpas.runtime.CpasClient.drawItem;
 import static badasintended.cpas.runtime.CpasClient.drawNinePatch;
 import static badasintended.cpas.runtime.CpasClient.getItemRenderer;
-import static badasintended.cpas.runtime.CpasClient.renderTooltip;
 
 @Environment(EnvType.CLIENT)
 public class ArmorSlotWidget extends FakeButtonWidget {
@@ -130,7 +129,7 @@ public class ArmorSlotWidget extends FakeButtonWidget {
     }
 
     @Override
-    public void renderToolTip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (wasHovered) {
             matrices.push();
             matrices.translate(0, 0, 300);
@@ -138,7 +137,7 @@ public class ArmorSlotWidget extends FakeButtonWidget {
 
             fill(matrices, hoveredX + 1, y + 1, hoveredX + 17, y + 17, 0x80ffffff);
             if (handler.getCursorStack().isEmpty()) {
-                renderTooltip(matrices, mouseX, mouseY, hoveredStack, player);
+                CpasClient.renderTooltip(matrices, mouseX, mouseY, hoveredStack, player);
             } else {
                 // when you see this, yes it redraws the cursor stack
                 getItemRenderer().zOffset += 100;

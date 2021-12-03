@@ -3,7 +3,7 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 
 plugins {
-    id("fabric-loom").version("0.8-SNAPSHOT")
+    id("fabric-loom").version("0.10.+")
     id("com.matthewprenger.cursegradle").version("1.4.0")
 }
 
@@ -23,28 +23,26 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_16
-        targetCompatibility = JavaVersion.VERSION_16
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         withSourcesJar()
     }
 
-    afterEvaluate {
-        tasks.processResources {
-            inputs.property("version", project.version)
+    tasks.processResources {
+        inputs.property("version", project.version)
 
-            filesMatching("fabric.mod.json") {
-                expand("version" to project.version)
-            }
+        filesMatching("fabric.mod.json") {
+            expand("version" to project.version)
         }
+    }
 
-        tasks.withType<JavaCompile> {
-            options.encoding = "UTF-8"
-            options.release.set(16)
-        }
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.release.set(17)
+    }
 
-        tasks.jar {
-            from(rootProject.file("includes"))
-        }
+    tasks.jar {
+        from(rootProject.file("includes"))
     }
 }
 
@@ -54,10 +52,16 @@ subprojects.forEach {
     }
 }
 
+repositories {
+    maven("https://maven.shedaniel.me")
+}
+
 dependencies {
+    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProp["rei"]}")
+
     afterEvaluate {
         subprojects.forEach {
-            implementation(it)
+            implementation(project(path = it.path, configuration = "namedElements"))
             include(it)
         }
     }
@@ -83,11 +87,15 @@ curseforge {
             }
 
             relations(closureOf<CurseRelation> {
-                prop["cf.require"].split(", ").forEach {
-                    requiredDependency(it)
+                prop.ifPresent("cf.require") { require ->
+                    require.split(", ").forEach {
+                        requiredDependency(it)
+                    }
                 }
-                prop["cf.optional"].split(", ").forEach {
-                    optionalDependency(it)
+                prop.ifPresent("cf.optional") { optional ->
+                    optional.split(", ").forEach {
+                        optionalDependency(it)
+                    }
                 }
             })
 

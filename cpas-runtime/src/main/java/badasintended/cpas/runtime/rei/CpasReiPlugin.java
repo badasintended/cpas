@@ -10,6 +10,8 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.config.ConfigObject;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
+import me.shedaniel.rei.api.common.plugins.PluginManager;
+import me.shedaniel.rei.api.common.registry.ReloadStage;
 
 public class CpasReiPlugin implements REIClientPlugin {
 
@@ -34,7 +36,7 @@ public class CpasReiPlugin implements REIClientPlugin {
     }
 
     @Override
-    public void postRegister() {
+    public void postStage(PluginManager<REIClientPlugin> manager, ReloadStage stage) {
         boolean[] previouslyVisible = new boolean[1];
         EditorScreenWidget.onVisibilityChanged = visible -> {
             ConfigObject config = ConfigObject.getInstance();
