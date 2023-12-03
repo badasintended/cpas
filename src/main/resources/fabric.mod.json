@@ -10,11 +10,10 @@
     "issues"  : "https://github.com/badasintended/cpas/issues"
   },
   "license"      : "MIT",
-  "icon"         : "assets/cpas/icon.png",
   "environment"  : "*",
   "depends"      : {
-    "fabricloader": ">=0.12",
-    "fabric"      : ">=0.43",
-    "minecraft"   : "1.18.x"
+    "fabricloader": ">=0.14.25",
+    "fabric"      : ">=0.58",
+    "minecraft"   : ">=1.19"
   }
 }

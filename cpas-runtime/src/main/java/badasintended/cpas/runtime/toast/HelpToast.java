@@ -10,7 +10,7 @@ import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import static badasintended.cpas.runtime.CpasClient.bindTexture;
 import static badasintended.cpas.runtime.CpasClient.getTextRenderer;
@@ -18,11 +18,11 @@ import static badasintended.cpas.runtime.CpasClient.getTextRenderer;
 @Environment(EnvType.CLIENT)
 public class HelpToast extends DrawableHelper implements Toast {
 
-    private final TranslatableText text;
+    private final Text text;
     private final List<OrderedText> warpedText;
 
     public HelpToast() {
-        text = new TranslatableText("tutorial.cpas", CpasClient.EDIT.getBoundKeyLocalizedText().getString().toUpperCase());
+        text = Text.translatable("tutorial.cpas", CpasClient.EDIT.getBoundKeyLocalizedText().getString().toUpperCase());
         warpedText = getTextRenderer().wrapLines(text, getWidth() - 32);
     }
 

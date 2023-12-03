@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.SoundManager;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public abstract class FakeButtonWidget extends ClickableWidget {
@@ -18,7 +18,7 @@ public abstract class FakeButtonWidget extends ClickableWidget {
     }
 
     public FakeButtonWidget(int x, int y, int width, int height, boolean sound) {
-        super(x, y, width, height, LiteralText.EMPTY);
+        super(x, y, width, height, Text.empty());
         this.sound = sound;
     }
 
