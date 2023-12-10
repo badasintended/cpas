@@ -1,10 +1,8 @@
-import com.matthewprenger.cursegradle.CurseArtifact
-import com.matthewprenger.cursegradle.CurseProject
-import com.matthewprenger.cursegradle.CurseRelation
+import me.modmuss50.mpp.ReleaseType
 
 plugins {
-    id("fabric-loom").version("1.4.+")
-    id("com.matthewprenger.cursegradle").version("1.4.0")
+    id("fabric-loom") version "1.4.+"
+    id("me.modmuss50.mod-publish-plugin") version "0.4.5"
 }
 
 val env: Map<String, String> = System.getenv()
@@ -67,41 +65,33 @@ dependencies {
     }
 }
 
-curseforge {
-    env["CURSEFORGE_API"]?.let { CURSEFORGE_API ->
-        apiKey = CURSEFORGE_API
-        project(closureOf<CurseProject> {
-            id = prop["cf.projectId"]
-            releaseType = prop["cf.releaseType"]
+publishMods {
+    file.set(tasks.remapJar.get().archiveFile)
+    changelog.set("https://github.com/badasintended/cpas/releases/tag/${project.version}")
+    type.set(ReleaseType.of(prop["releaseType"]))
+    modLoaders.add("fabric")
 
-            changelogType = "markdown"
-            changelog = "https://github.com/badasintended/cpas/releases/tag/${project.version}"
+    env["CURSEFORGE_API"]?.let { apiKey ->
+        curseforge {
+            accessToken.set(apiKey)
+            projectId.set(prop["cf.projectId"])
 
-            mainArtifact(tasks["remapJar"], closureOf<CurseArtifact> {
-                displayName = "[${prop["minecraft"]}] v${project.version}"
-            })
+            minecraftVersions.addAll(prop["cf.gameVersion"].split(", "))
 
-            addGameVersion("Fabric")
-            prop["cf.gameVersion"].split(", ").forEach {
-                addGameVersion(it)
-            }
+            prop.ifPresent("cf.require") { requires(*it.split(", ").toTypedArray()) }
+            prop.ifPresent("cf.optional") { optional(*it.split(", ").toTypedArray()) }
+        }
+    }
 
-            relations(closureOf<CurseRelation> {
-                prop.ifPresent("cf.require") { require ->
-                    require.split(", ").forEach {
-                        requiredDependency(it)
-                    }
-                }
-                prop.ifPresent("cf.optional") { optional ->
-                    optional.split(", ").forEach {
-                        optionalDependency(it)
-                    }
-                }
-            })
+    env["MODRINTH_TOKEN"]?.let { token ->
+        modrinth {
+            accessToken.set(token)
+            projectId.set(prop["cf.projectId"])
 
-            afterEvaluate {
-                uploadTask.dependsOn("build")
-            }
-        })
+            minecraftVersions.addAll(prop["mr.gameVersion"].split(", "))
+
+            prop.ifPresent("mr.require") { requires(*it.split(", ").toTypedArray()) }
+            prop.ifPresent("mr.optional") { optional(*it.split(", ").toTypedArray()) }
+        }
     }
 }
