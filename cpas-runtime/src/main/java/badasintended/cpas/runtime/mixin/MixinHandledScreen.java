@@ -37,7 +37,7 @@ public abstract class MixinHandledScreen implements CpasTarget {
             ci.cancel();
     }
 
-    @Inject(method = "isPauseScreen", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "shouldPause", at = @At("RETURN"), cancellable = true)
     private void isPauseScreen(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValueZ() || (editorScreen != null && editorScreen.visible));
     }

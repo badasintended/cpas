@@ -3,7 +3,7 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 
 plugins {
-    id("fabric-loom").version("0.10.+")
+    id("fabric-loom").version("1.4.+")
     id("com.matthewprenger.cursegradle").version("1.4.0")
 }
 

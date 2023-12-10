@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import static badasintended.cpas.runtime.CpasClient.bindTexture;
 import static badasintended.cpas.runtime.CpasClient.drawNinePatch;
@@ -22,7 +22,7 @@ public class ToggleButtonWidget extends ButtonWidget {
     private boolean enabled = false;
 
     public ToggleButtonWidget(int x, int y, Consumer<Boolean> consumer, String tlKey, Object... args) {
-        super(x, y, 22, 13, new TranslatableText(tlKey, args), w -> {
+        super(x, y, 22, 13, Text.translatable(tlKey, args),w -> {
         });
 
         this.consumer = consumer;
