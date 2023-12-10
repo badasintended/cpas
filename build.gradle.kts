@@ -86,7 +86,7 @@ publishMods {
     env["MODRINTH_TOKEN"]?.let { token ->
         modrinth {
             accessToken.set(token)
-            projectId.set(prop["cf.projectId"])
+            projectId.set(prop["mr.projectId"])
 
             minecraftVersions.addAll(prop["mr.gameVersion"].split(", "))
 
